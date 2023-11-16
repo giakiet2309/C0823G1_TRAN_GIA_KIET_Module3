@@ -31,6 +31,8 @@ birthday date
 create table students_books(
 id_students int,
 id_books int,
+borrow_date DATE,
+return_date DATE,
 primary key(id_books,id_students),
 foreign key(id_books) references books(id_books),
 foreign key(id_students) references students(id_students)
