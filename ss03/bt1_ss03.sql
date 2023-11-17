@@ -28,12 +28,33 @@ name_students varchar(50),
 birthday date
 );
 
-create table borrows(
-id_borrows int primary key auto_increment,
+create table students_books(
 id_students int,
 id_books int,
 borrow_date DATE,
 return_date DATE,
+primary key(id_books,id_students),
 foreign key(id_books) references books(id_books),
 foreign key(id_students) references students(id_students)
 );
+
+insert into category(name_category) 
+values ('Tự nhiên'),
+('Xã hội'),
+('Truyện'),
+('Tiểu Thuyết'),
+('Khác');
+
+insert into authors(name_authors) 
+values ('Nguyễn Thái Học'),
+('Trần Mình Hoàng'),
+('Dương Trung Quốc'),
+('Lê Văn Hiến'),
+('Hà Văn Minh');
+
+insert into students(class_name,name_students,birthday) 
+values ('C0822G1','Nguyễn Văn A','1999-12-12'),
+('C0822G1','Nguyễn Văn B','1999-12-13'),
+('C0822G1','Nguyễn Văn C','1999-12-14'),
+('C0922G1','Nguyễn Văn D','1999-12-15'),
+('C1022G1','Nguyễn Văn E','1999-12-16');
