@@ -32,8 +32,8 @@ create table borrows(
 id_borrows int primary key auto_increment,
 id_students int,
 id_books int,
-borrow_date DATE,
-return_date DATE,
+borrow_date date,
+return_date date,
 foreign key(id_books) references books(id_books),
 foreign key(id_students) references students(id_students)
 );
