@@ -28,12 +28,12 @@ name_students varchar(50),
 birthday date
 );
 
-create table students_books(
+create table borrows(
+id_borrows int primary key auto_increment,
 id_students int,
 id_books int,
 borrow_date DATE,
 return_date DATE,
-primary key(id_books,id_students),
 foreign key(id_books) references books(id_books),
 foreign key(id_students) references students(id_students)
 );
@@ -58,3 +58,44 @@ values ('C0822G1','Nguyễn Văn A','1999-12-12'),
 ('C0822G1','Nguyễn Văn C','1999-12-14'),
 ('C0922G1','Nguyễn Văn D','1999-12-15'),
 ('C1022G1','Nguyễn Văn E','1999-12-16');
+
+insert into books(title,page_size,id_authors,id_category)
+values ('Toán',45,1,1),
+('Văn',34,2,2),
+('Sử',56,3,2),
+('Địa',76,4,2),
+('Hóa',32,5,1);
+
+insert into borrows(id_students,id_books,borrow_date,return_date)
+values (1,1,'2022-12-12','2022-12-13'),
+(2,2,'2022-12-12','2022-12-15'),
+(3,3,'2022-12-12','2022-12-15'),
+(4,4,'2022-12-12','2022-12-12'),
+(1,5,'2022-12-13','2022-12-15'),
+(1,5,'2022-12-14','2022-12-14'),
+(3,4,'2022-12-15','2022-12-29'),
+(3,3,'2022-12-8','2022-12-14'),
+(1,2,'2022-12-6','2022-12-30');
+
+
+-- Lấy ra toàn bộ sách có trong thư viện, cùng với tên thể loại và tác giả 
+select books.* , authors.name_authors as 'tác giả' , category.name_category as 'thể loại'
+ from books 
+join authors 
+on books.id_authors = authors.id_authors 
+join category
+on books.id_category = category.id_category;
+--   Lấy ra danh sách các học viên đã từng mượn sách và sắp xếp danh sách theo theo tên từ a->z
+select * 
+from students
+ join borrows 
+on students.id_students = borrows.id_students;
+
+-- Lấy ra  2 quyển sách được mượn nhiều nhất
+SELECT 
+ title,count(borrows.id_books) AS so_luong
+FROM books
+JOIN borrows  ON books.id_books = borrows.id_books
+GROUP BY borrows.id_books
+ORDER BY so_luong DESC
+LIMIT 2; 
