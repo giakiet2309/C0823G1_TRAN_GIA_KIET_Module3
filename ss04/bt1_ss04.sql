@@ -65,7 +65,7 @@ values ('Toán',45,1,1),
 ('Sử',56,3,2),
 ('Địa',76,4,2),
 ('Hóa',32,5,1),
-('Sinh',69,3,2);
+('sinh',69,3,2);
 
 insert into borrows(id_students,id_books,borrow_date,return_date)
 values (1,1,'2022-12-12','2022-12-13'),
@@ -78,25 +78,38 @@ values (1,1,'2022-12-12','2022-12-13'),
 (3,3,'2022-12-8','2022-12-14'),
 (1,2,'2022-12-6','2022-12-30');
 
-
--- Lấy ra toàn bộ sách có trong thư viện, cùng với tên thể loại và tác giả 
-select books.* , authors.name_authors as 'tác giả' , category.name_category as 'thể loại'
- from books 
-join authors 
-on books.id_authors = authors.id_authors 
-join category
-on books.id_category = category.id_category;
---   Lấy ra danh sách các học viên đã từng mượn sách và sắp xếp danh sách theo theo tên từ a->z
-select * 
-from students
- join borrows 
-on students.id_students = borrows.id_students;
-
--- Lấy ra  2 quyển sách được mượn nhiều nhất
+--  Thông kê các đầu sách được mượn nhiều nhất 
 select 
  title,count(borrows.id_books) as so_luong
 from books
 join borrows on books.id_books = borrows.id_books
 group by borrows.id_books
-order by so_luong desc
-limit 2; 
+order by so_luong desc;
+
+-- thông kê các đầu sách chưa được mượn
+
+select id_books,title
+from books
+where id_books not in (select books.id_books
+from books
+join borrows b on books.id_books = b.id_books);
+
+-- lấy ra danh sách các học viên đã từng mượn sách và sắp xếp  theo số lượng mượn sách từ lớn đến nhỏ 
+select s.name_students,count(s.id_students) as so_luong 
+from students s
+join borrows b on s.id_students = b.id_students
+group by s.id_students
+order by so_luong desc;
+
+-- - Lấy ra các học viên mượn sách nhiều nhất của thư viện 
+select s.name_students,count(s.id_students) as so_luong 
+from students s
+join borrows b on s.id_students = b.id_students
+group by s.id_students
+having so_luong in (
+select max(so_luong) 
+from (select s.name_students,count(s.id_students) as so_luong 
+from students s
+join borrows b on s.id_students = b.id_students
+group by s.id_students) bt
+);
