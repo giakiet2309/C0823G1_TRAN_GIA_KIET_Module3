@@ -76,52 +76,13 @@ values (1,1,'2022-12-12','2022-12-13'),
 (1,5,'2022-12-14','2022-12-14'),
 (3,4,'2022-12-15','2022-12-29'),
 (3,3,'2022-12-8','2022-12-14'),
-(1,2,'2022-12-6','2022-12-30');
+(1,2,'2022-12-6','2022-12-30-');
 
---  Thông kê các đầu sách được mượn nhiều nhất 
 
-select 
- title,count(borrows.id_books) as so_luong
-from books
-join borrows on books.id_books = borrows.id_books
-group by borrows.id_books
-order by so_luong desc;
+--  Tao index cho cột  title của bảng books 
+create index index_name 
+on books(title);
+-- Tạo 1 view để lấy ra danh sách các quyển sách đã được mượn, có hiển thị thêm cột số lần đã được mượn
 
-select title ,count(borrows.id_books) as so_luong
-from books
-join borrows  on books.id_books = borrows.id_books
-group by borrows.id_books
-having so_luong in (select 
-max(so_luong)
-from  ( select count(borrows.id_books) as so_luong,books.title 
-from books
-join borrows on books.id_books = borrows.id_books
-group by borrows.id_books) as bt);
+--   Viết 1 stored procedure thêm mới book trong database với tham số kiểu IN
 
--- thông kê các đầu sách chưa được mượn
-
-select id_books,title
-from books
-where id_books not in (select books.id_books
-from books
-join borrows b on books.id_books = b.id_books);
-
--- lấy ra danh sách các học viên đã từng mượn sách và sắp xếp  theo số lượng mượn sách từ lớn đến nhỏ 
-select s.name_students,count(s.id_students) as so_luong 
-from students s
-join borrows b on s.id_students = b.id_students
-group by s.id_students
-order by so_luong desc;
-
--- - Lấy ra các học viên mượn sách nhiều nhất của thư viện 
-select s.name_students,count(s.id_students) as so_luong 
-from students s
-join borrows b on s.id_students = b.id_students
-group by s.id_students
-having so_luong in (
-select max(so_luong) 
-from (select s.name_students,count(s.id_students) as so_luong 
-from students s
-join borrows b on s.id_students = b.id_students
-group by s.id_students) bt
-);
