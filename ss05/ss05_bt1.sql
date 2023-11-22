@@ -80,9 +80,23 @@ values (1,1,'2022-12-12','2022-12-13'),
 
 
 --  Tao index cho cột  title của bảng books 
-create index index_name 
+create unique index index_name 
 on books(title);
+
 -- Tạo 1 view để lấy ra danh sách các quyển sách đã được mượn, có hiển thị thêm cột số lần đã được mượn
+create view books_view as
+select bk.title,count(b.id_books) so_luong
+from books bk
+join borrows b on bk.id_books = b.id_books
+group by b.id_books;
 
 --   Viết 1 stored procedure thêm mới book trong database với tham số kiểu IN
+delimiter //
+create procedure procedure_books (add_id_category int,add_id_author int,add_title varchar(200),add_page_size int)
+ begin
+ insert into books(id_category,id_authors,title,page_size)
+ values (add_id_category,add_id_author,add_title,add_page_size);
+ end //
+delimiter ;
 
+CALL procedure_books(3,2,'Tin Học',12);
